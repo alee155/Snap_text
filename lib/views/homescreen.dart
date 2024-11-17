@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
@@ -112,14 +113,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _copyToClipboard(String text) {
     Clipboard.setData(ClipboardData(text: text));
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          backgroundColor: Colors.orange,
-          content: Text(
-            'Text copied to clipboard!',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          )),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      backgroundColor: Color(0xFF378B88),
+      content: Text(
+        'Text copied to clipboard!',
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      ),
+    ));
   }
 
   @override
@@ -131,173 +131,188 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Snap Text",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.orange,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Container(
-                height: 400,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: _selectedImage != null
-                    ? Stack(
-                        children: [
-                          Positioned.fill(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: Image.file(
-                                _selectedImage!,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: GestureDetector(
-                              onTap: _clearImage,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.black54,
-                                ),
-                                child: const Icon(
-                                  Icons.close,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    : const Center(
-                        child: Text(
-                          'No Image Selected',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 18),
-                        ),
-                      ),
-              ),
-            ),
-            const SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: _extractedText.isEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: ColorizeAnimatedTextKit(
-                        text: const ['No text extracted yet'],
-                        textStyle: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        colors: const [
-                          Colors.orange,
-                          Colors.black,
-                          Colors.orange,
-                          Colors.black,
-                        ],
-                        speed: const Duration(milliseconds: 1000),
-                        totalRepeatCount: 100,
-                      ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: _isCard
-                          ? Column(
-                              children: [
-                                if (_name.isNotEmpty)
-                                  _buildDetailRow('Name', _name),
-                                if (_email.isNotEmpty)
-                                  _buildDetailRow('Email', _email),
-                                if (_phoneNumber.isNotEmpty)
-                                  _buildDetailRow('Phone Number', _phoneNumber),
-                                if (_address.isNotEmpty)
-                                  _buildDetailRow('Address', _address),
-                              ],
-                            )
-                          : Stack(
-                              children: [
-                                Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: AnimatedTextKit(
-                                    animatedTexts: [
-                                      TyperAnimatedText(
-                                        _extractedText,
-                                        textStyle: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                        speed: const Duration(milliseconds: 50),
-                                      ),
-                                    ],
-                                    totalRepeatCount: 1,
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 10,
-                                  right: 10,
-                                  child: GestureDetector(
-                                    onTap: () =>
-                                        _copyToClipboard(_extractedText),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.black54,
-                                      ),
-                                      child: const Icon(
-                                        Icons.copy,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                    ),
-            ),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Stack(
               children: [
-                ImagePickerButton(
-                  icon: Icons.camera,
-                  label: 'Camera',
-                  backgroundColor: Colors.orange,
-                  onPressed: _pickFromCamera,
+                Image.asset(
+                  'assets/eyes.jpg',
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
                 ),
-                ImagePickerButton(
-                  icon: Icons.image,
-                  label: 'Gallery',
-                  backgroundColor: Colors.orange,
-                  onPressed: _pickFromGallery,
+                BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+                  child: Container(color: Colors.teal.withOpacity(0.5)),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: 100),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Container(
+                  height: 400,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: _selectedImage != null
+                      ? Stack(
+                          children: [
+                            Positioned.fill(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Image.file(
+                                  _selectedImage!,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: GestureDetector(
+                                onTap: _clearImage,
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black54,
+                                  ),
+                                  child: const Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : const Center(
+                          child: Text(
+                            'No Image Selected',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 18),
+                          ),
+                        ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: _extractedText.isEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: ColorizeAnimatedTextKit(
+                          text: const ['No text extracted yet'],
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          colors: const [
+                            Colors.white,
+                            Colors.teal,
+                            Colors.white,
+                            Colors.teal,
+                          ],
+                          speed: const Duration(milliseconds: 1000),
+                          totalRepeatCount: 100,
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: _isCard
+                            ? Column(
+                                children: [
+                                  if (_name.isNotEmpty)
+                                    _buildDetailRow('Name', _name),
+                                  if (_email.isNotEmpty)
+                                    _buildDetailRow('Email', _email),
+                                  if (_phoneNumber.isNotEmpty)
+                                    _buildDetailRow(
+                                        'Phone Number', _phoneNumber),
+                                  if (_address.isNotEmpty)
+                                    _buildDetailRow('Address', _address),
+                                ],
+                              )
+                            : Stack(
+                                children: [
+                                  Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: AnimatedTextKit(
+                                      animatedTexts: [
+                                        TyperAnimatedText(
+                                          _extractedText,
+                                          textStyle: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                          speed:
+                                              const Duration(milliseconds: 50),
+                                        ),
+                                      ],
+                                      totalRepeatCount: 1,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 10,
+                                    right: 10,
+                                    child: GestureDetector(
+                                      onTap: () =>
+                                          _copyToClipboard(_extractedText),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.black54,
+                                        ),
+                                        child: const Icon(
+                                          Icons.copy,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ),
+              ),
+              const SizedBox(height: 30),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ImagePickerButton(
+                    icon: Icons.camera,
+                    label: 'Camera',
+                    backgroundColor: Colors.teal,
+                    onPressed: _pickFromCamera,
+                  ),
+                  ImagePickerButton(
+                    icon: Icons.image,
+                    label: 'Gallery',
+                    backgroundColor: Colors.teal,
+                    onPressed: _pickFromGallery,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -321,7 +336,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.copy),
-            onPressed: () => _copyToClipboard(detail),
+            onPressed: () {
+              _copyToClipboard(detail);
+            },
           ),
         ],
       ),
